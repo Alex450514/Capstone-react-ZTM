@@ -1,0 +1,38 @@
+/* .App {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.all-category-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  flex: 1 1;
+}
+
+.category-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  border-radius: 10px;
+  min-height: 250px;
+  background-size: cover;
+  padding: 20px 30px;
+}
+
+.all-category-container>* {
+  flex: 1 1 320px;
+}
+
+.category-title {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.703);
+  color: white;
+  text-align: end;
+  padding: 5px 5px;
+} */
