@@ -32,8 +32,6 @@ const SignUpForm = () => {
     const {firstName, lastName, email, password, confirmPassword} = formFields;
     const [isPasswordValid, setIsPasswordValid] = useState(false);
 
-    console.log(formFields);
-
     const resetFormFields = () => {
         setFormFields(defaultFormFields)
     }
@@ -92,24 +90,24 @@ const SignUpForm = () => {
     };
 
     return (
-        <div className="sign-up-container">
-            <h2>Dont have an account?</h2>
-            <span>Sign up with email and passord</span>
-            <form onSubmit={handleSubmit}>
-                <FormInput label="First Name" required type="text" onChange={handleChange} name="firstName" value={firstName} />
+            <div className="sign-up-container">
+                <h2>Dont have an account?</h2>
+                <span>Sign up with email and passord</span>
+                <form onSubmit={handleSubmit}>
+                    <FormInput label="First Name" required type="text" onChange={handleChange} name="firstName" value={firstName} />
 
-                <FormInput label="Last Name" required type="text" onChange={handleChange} name="lastName" value={lastName} />
+                    <FormInput label="Last Name" required type="text" onChange={handleChange} name="lastName" value={lastName} />
 
-                <FormInput label="Email" required type="email" onChange={handleChange} name="email" value={email} />
+                    <FormInput label="Email" required type="email" onChange={handleChange} name="email" value={email} />
 
-                <FormInput label="Password" required type="password" onChange={handleChange} name="password" value={password} />
-                <p>{password && !isPasswordValid ? "Password is not secure enough." : ""}</p>
+                    <FormInput label="Password" required type="password" onChange={handleChange} name="password" value={password} />
+                    <p>{password && !isPasswordValid ? "Password is not secure enough." : ""}</p>
 
-                <FormInput label="Confirm password" required type="password" onChange={handleChange} name="confirmPassword" value={confirmPassword} />
+                    <FormInput label="Confirm password" required type="password" onChange={handleChange} name="confirmPassword" value={confirmPassword} />
 
-                <Button buttonType="" type="submit">Sign-up</Button>
-            </form>
-        </div>
+                    <Button buttonType="" type="submit">Sign-up</Button>
+                </form>
+            </div>
     )
 
 }
