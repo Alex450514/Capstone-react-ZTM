@@ -10,6 +10,8 @@ import { auth } from "../../utils/firebase/firebase.utils";
 
 import { handleSignInGoogle } from "../../routes/sign-in/sign-in.components";
 
+// import { UserContext } from "../../contexts/user.context";
+
 const defaultFormFields =  {
     email: "",
     password: ""
@@ -19,6 +21,8 @@ const SignInForm = () => {
 
     const [formFields, setFormFields] = useState(defaultFormFields);
     const {email, password} = formFields;
+
+    // const { setCurrentUser } = useContext(UserContext);
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields)
@@ -32,6 +36,7 @@ const SignInForm = () => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             // Sign-in successful.
             console.log("Signed in user:", userCredential.user);
+            // setCurrentUser(userCredential.user);
             // Here, you can redirect the user or update the application's state
             resetFormFields();
         } catch (error) {

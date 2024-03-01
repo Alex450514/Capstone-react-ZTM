@@ -1,5 +1,5 @@
 import './sign-up-form.styles.scss';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from '../button/button.component';
 
@@ -8,6 +8,8 @@ import { auth, db } from "../../utils/firebase/firebase.utils";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
 import { doc, setDoc } from "firebase/firestore";
+
+// import { UserContext } from '../../contexts/user.context';
 
 const defaultFormFields =  {
     firstName: "",
@@ -31,6 +33,8 @@ const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const {firstName, lastName, email, password, confirmPassword} = formFields;
     const [isPasswordValid, setIsPasswordValid] = useState(false);
+
+    // const { setCurrentUser } = useContext(UserContext);
 
     const resetFormFields = () => {
         setFormFields(defaultFormFields)
@@ -63,7 +67,9 @@ const SignUpForm = () => {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
 
-            await updateProfile(userCredential.user, {
+            // setCurrentUser(user);
+
+            await updateProfile(user, {
                 displayName: `${firstName} ${lastName}`
             });
             // Reset form fields or redirect user here

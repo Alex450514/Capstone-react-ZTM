@@ -1,4 +1,4 @@
-import { auth, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
+import { auth } from "../../utils/firebase/firebase.utils";
 import { signInWithRedirect, GoogleAuthProvider, getRedirectResult } from "firebase/auth";
 
 import { useEffect } from 'react';
@@ -17,9 +17,8 @@ const SignIn = () => {
       .then((result) => {
         if (result) {
           // User signed in. You can get the user's information from result.user
-          const userDocRef = createUserDocumentFromAuth(result.user)
+          //// const userDocRef = createUserDocumentFromAuth(result.user)
           // You may also want to save the user data to your component's state or context
-          console.log(result.user)
         }
       }).catch((error) => {
         // Handle Errors here, such as by displaying an error message
@@ -35,6 +34,7 @@ const SignIn = () => {
       );
 }
 
+//FIREBASE functions
 export const handleSignInGoogle = () => {
   const provider = new GoogleAuthProvider();
   signInWithRedirect(auth, provider);

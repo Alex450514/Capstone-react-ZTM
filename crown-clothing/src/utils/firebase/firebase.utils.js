@@ -1,6 +1,6 @@
 
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
@@ -45,4 +45,9 @@ export const createUserDocumentFromAuth = async (userAuth) => {
 
     //if user data exists
     return userDocRef;
+ 
+}
+
+export const onAuthStateChangedListener = (callback) => {
+    onAuthStateChanged(auth, callback);
 }
