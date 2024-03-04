@@ -5,12 +5,17 @@ import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 import './main-header.styles.scss';
 
 import { UserContext } from "../../contexts/user.context";
+import CartContext from "../../contexts/cart.context";
+
+import CardIcon from "../cart-icon/cad-icon.component";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 
 import { signOut } from "firebase/auth";
 import { auth } from "../../utils/firebase/firebase.utils";
 
 const Header = () => {
     const { currentUser } = useContext(UserContext);
+    const { isCartOpen, setIsCartOpen } = useContext(CartContext);
 
     //FIREBASE
     const handleSignOut = async () => {
@@ -37,8 +42,8 @@ const Header = () => {
                     {
                         currentUser ? (
                             <div>
-                                {currentUser && <span>Welcome, {currentUser.displayName || 'User'}!</span>}
-                                <span onClick={handleSignOut} className="nav-link">Sign-out</span>
+                            {currentUser && <span>Welcome, {currentUser.displayName || 'User'}!</span>}
+                            <span onClick={handleSignOut} className="nav-link">Sign-out</span>
                             </div>
                         ) : (
                             <Link className="nav-link" to="/sign-in">
@@ -46,7 +51,9 @@ const Header = () => {
                             </Link>
                         )
                     }
+                    <CardIcon></CardIcon>
                 </div>
+                {isCartOpen && <CartDropdown />}
             </div>
             <Outlet />
         </Fragment>
