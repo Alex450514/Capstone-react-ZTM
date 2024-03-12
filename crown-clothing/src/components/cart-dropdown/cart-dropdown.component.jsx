@@ -1,29 +1,33 @@
 import './cart-dropdown.styles.scss';
 
 import Button from '../button/button.component';
+import CartItem from '../cart-item/cart-item.component';
 
 import CartContext from '../../contexts/cart.context';
 import { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const CartDropdown = () => {
     const { cartItems } = useContext(CartContext);
+
+    let navigate = useNavigate();
+
+    const navigateToRoute = () => {
+        navigate('/checkout'); 
+    };
 
     return (
         <div className='cart-dropdown-container'>
             <div className='cart-items'>
                 {cartItems.length > 0 ? (
-                    cartItems.map(({ id, name, price, quantity }) => (
-                    <div key={id} className="cart-item">
-                        <h2>{name}</h2>
-                        <p>${price} x {quantity}</p>
-                        {/* Here, you can add buttons or inputs to change the quantity or remove the item */}
-                    </div>
+                    cartItems.map((product) => (
+                        <CartItem product={product}></CartItem>
                     ))
                 ) : (
                     <p>Your cart is empty.</p>
                 )}
             </div>
-            <Button>GO TO CHECKOUT</Button>
+            <Button onClick={navigateToRoute}>GO TO CHECKOUT</Button>
         </div>
     )
 }
