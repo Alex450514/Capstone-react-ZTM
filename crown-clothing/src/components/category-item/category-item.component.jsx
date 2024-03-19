@@ -10,12 +10,12 @@ const CategoryItem = (props) => {
     return (
         <DirectoryItemContainer>
             <BackgroundImage imageurl={imageUrl} />
-            <Body>
-                <Link key={title} to={`/shop/${title.toLowerCase()}`}>
+            <Link key={title} to={`/shop/${title.toLowerCase()}`}>
+                <Body>
                     <h2>{title}</h2>
                     <h3>Shop now</h3>
-                </Link>
-            </Body>
+                </Body>
+            </Link>
         </DirectoryItemContainer>
     )
 }
