@@ -8,6 +8,7 @@ import SignIn from './routes/sign-in/sign-in.components';
 import Checkout from './routes/checkout/checkout.component';
 
 import { Routes, Route } from 'react-router-dom';
+import ProductCategory from './routes/product-category/product-category.component';
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
       <Route path='/' element={<Header />}>
         <Route index element={<Home />} />
         <Route path='shop' element={<Shop />} />
+        <Route path="/shop/:categoryId" element={<ProductCategory />} />
         <Route path='sign-in' element={<SignIn />} />
         <Route path='checkout' element={<Checkout />} />
       </Route>

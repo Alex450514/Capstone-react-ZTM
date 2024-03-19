@@ -29,7 +29,7 @@ const CheckoutItem = ({ product }) => {
                     &#10095;
                 </div>
             </span>
-            <span className='price'>{price}</span>
+            <span className='price'>{price}$</span>
             {/* <div className='qty-selector'>
                 <Button onClick={dropQty}>Less</Button>
                 <span className='qantity'>{quantity}</span>

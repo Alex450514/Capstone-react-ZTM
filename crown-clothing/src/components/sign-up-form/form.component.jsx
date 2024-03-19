@@ -1,7 +1,7 @@
 import './sign-up-form.styles.scss';
 import { useState, useContext } from "react";
 import FormInput from "../form-input/form-input.component";
-import Button from '../button/button.component';
+import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 
 import { auth, db } from "../../utils/firebase/firebase.utils";
 
@@ -111,7 +111,7 @@ const SignUpForm = () => {
 
                     <FormInput label="Confirm password" required type="password" onChange={handleChange} name="confirmPassword" value={confirmPassword} />
 
-                    <Button buttonType="" type="submit">Sign-up</Button>
+                    <Button buttonType={BUTTON_TYPE_CLASSES.base} type="submit">Sign-up</Button>
                 </form>
             </div>
     )

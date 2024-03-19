@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch } from "firebase/firestore";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA5GyrTTeb7M90Guz62cHTzFSjithU_mWU",
