@@ -5,12 +5,12 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc, collection, writeBatch } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyA5GyrTTeb7M90Guz62cHTzFSjithU_mWU",
-    authDomain: "crown-clothing-36a28.firebaseapp.com",
-    projectId: "crown-clothing-36a28",
-    storageBucket: "crown-clothing-36a28.appspot.com",
-    messagingSenderId: "597725410306",
-    appId: "1:597725410306:web:f679c8399436135039631b"
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 const app = initializeApp(firebaseConfig);
