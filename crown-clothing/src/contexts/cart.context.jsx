@@ -1,4 +1,6 @@
-import { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useReducer } from 'react';
+
+import { createAction } from '../utils/reducer/reducer.utils';
 
 // Initial context state
 const CartContext = createContext({
@@ -14,68 +16,111 @@ const CartContext = createContext({
 
 export default CartContext;
 
+export const CART_ACTION_TYPES = {
+  SET_IS_CART_OPEN: 'SET_IS_CART_OPEN',
+  SET_CART_ITEMS: 'SET_CART_ITEMS',
+  SET_CART_COUNT: 'SET_CART_COUNT',
+  SET_CART_TOTAL: 'SET_CART_TOTAL',
+}
+
+const INITIAL_STATE = {
+  isCartOpen: false,
+  cartItems: [],
+  cartCount: 0,
+  cartTotal: 0,
+}
+
+const cartReducer = (state, action) => {
+  const { type, payload } = action;
+
+  switch (type) {
+    case CART_ACTION_TYPES.SET_IS_CART_OPEN:
+      return {
+        ...state,
+        isCartOpen: payload
+      }
+    case CART_ACTION_TYPES.SET_CART_ITEMS:
+      return {
+        ...state,
+        ...payload
+      }
+    case CART_ACTION_TYPES.SET_CART_COUNT:
+      return {
+        ...state,
+        cartCount: payload
+      }
+    case CART_ACTION_TYPES.SET_CART_TOTAL:
+      return {
+        ...state,
+        cartTotal: payload
+      }
+    default:
+      throw new Error(`Unhandled type ${type} in cartReducer`);
+  }
+}
+
+
 export const CartProvider = ({ children }) => {
-    const [isCartOpen, setIsCartOpen] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
-    const [cartCount, setCartCount] = useState(0);
-    const [cartTotal, setCartTotal] = useState(0);
-  
-    //// Example function to add an item to the cart
+
+    const [{ isCartOpen, cartItems, cartCount, cartTotal }, dispatch] = useReducer(cartReducer, INITIAL_STATE);
+
+    const updateCartItemsReducer = (newCartItems) => {
+      const newCartCount = newCartItems.reduce((total, item) => total + item.quantity, 0);
+      const newCartTotal = newCartItems.reduce((total, item) => total + item.quantity * item.price, 0);
+      dispatch(createAction(CART_ACTION_TYPES.SET_CART_ITEMS, { cartItems: newCartItems }));
+      dispatch(createAction(CART_ACTION_TYPES.SET_CART_COUNT, newCartCount));
+      dispatch(createAction(CART_ACTION_TYPES.SET_CART_TOTAL, newCartTotal));
+    }
+
+    const setIsCartOpen = (bool) => {
+      dispatch(createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, bool));
+    }
+
     const addItemToCart = (productToAdd) => {
-      // Implement logic to add item to cart
-      setCartItems((prevCartItems) => {
-        // Check if productToAdd is already in cartItems
-        const existingCartItem = prevCartItems.find((item) => item.id === productToAdd.id);
-    
-        if (existingCartItem) {
-          // Increase the quantity
-          return prevCartItems.map((item) =>
-            item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
-          );
-        }
-    
-        console.log("item added")
-        // If the item is not in the cart, add it with a quantity of 1
-        return [...prevCartItems, { ...productToAdd, quantity: 1 }];
-      });
-    };
-  
-    //// Example function to remove an item from the cart
-    const removeItemFromCart = (productToRemove) => { 
-      // Implement logic to remove item from cart
-      setCartItems((prevCartItems) => {
-        // Check if the product exists in the cart
-        const existingCartItem = prevCartItems.find((item) => item.id === productToRemove.id);
-    
-        // If the product exists and quantity is more than 1, reduce its quantity
-        if (existingCartItem && existingCartItem.quantity > 1) {
-          return prevCartItems.map((item) =>
-            item.id === productToRemove.id ? { ...item, quantity: item.quantity - 1 } : item
-          );
-        } else {
-          // If the product exists and quantity is 1, remove the product from the cart
-          return prevCartItems.filter((item) => item.id !== productToRemove.id);
-        }
-      });
-    };
+      const newCartItems = addCartItem(cartItems, productToAdd);
+      updateCartItemsReducer(newCartItems);
+    }
 
-    //// Remove all quantities of a product
+    const removeItemFromCart = (productToRemove) => {
+      const newCartItems = removeCartItem(cartItems, productToRemove);
+      updateCartItemsReducer(newCartItems);
+    }
+
     const removeAllOfProductFromCart = (productToRemove) => {
-        setCartItems((prevCartItems) => prevCartItems.filter((item) => item.id !== productToRemove.id));
-    };
-  
-    //// Update cart count and total whenever cartItems changes
-    useEffect(() => {
-        const newCartCount = cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0);
-        setCartCount(newCartCount);
-    }, [cartItems]);
+      const newCartItems = removeCartItem(cartItems, productToRemove, true);
+      updateCartItemsReducer(newCartItems);
+    }
 
-    //// Calculate cart total
-    useEffect(() => {
-        const newCartTotal = cartItems.reduce((total, cartItem) => total + cartItem.quantity * cartItem.price, 0);
-        setCartTotal(newCartTotal);
-    }, [cartItems]);
-  
+    const addCartItem = (cartItems, productToAdd) => {
+      const newCartItems = [...cartItems];
+      const existingCartItem = newCartItems.find((item) => item.id === productToAdd.id);
+      if (existingCartItem) {
+        newCartItems.forEach((item) => {
+          if (item.id === productToAdd.id) {
+            item.quantity += 1;
+          }
+        })
+      } else {
+        newCartItems.push({ ...productToAdd, quantity: 1 });
+      }
+      return newCartItems;
+    }
+
+    const removeCartItem = (cartItems, productToRemove, removeAll = false) => {
+      return cartItems.reduce((accumulatedCartItems, item) => {
+        if (item.id === productToRemove.id) {
+          // If we're removing all quantities, or if the item's quantity is 1, remove it entirely
+          if (removeAll || item.quantity === 1) {
+            return accumulatedCartItems;
+          }
+          // Otherwise, decrement the quantity
+          return [...accumulatedCartItems, { ...item, quantity: item.quantity - 1 }];
+        }
+        // Keep items that aren't being removed
+        return [...accumulatedCartItems, item];
+      }, []);
+    };
+
     const value = { 
       isCartOpen, 
       setIsCartOpen, 
