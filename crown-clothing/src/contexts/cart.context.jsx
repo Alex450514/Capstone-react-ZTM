@@ -3,6 +3,7 @@ import { createContext, useReducer } from 'react';
 import { createAction } from '../utils/reducer/reducer.utils';
 
 // Initial context state
+///Hello
 const CartContext = createContext({
   isCartOpen: false,
   setIsCartOpen: () => {},
