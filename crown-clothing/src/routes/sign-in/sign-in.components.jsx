@@ -12,19 +12,6 @@ const SignIn = () => {
 
 //FIREBASE
 //Google log-in/signup
-  useEffect(() => {
-    getRedirectResult(auth)
-      .then((result) => {
-        if (result) {
-          // User signed in. You can get the user's information from result.user
-          //// const userDocRef = createUserDocumentFromAuth(result.user)
-          // You may also want to save the user data to your component's state or context
-        }
-      }).catch((error) => {
-        // Handle Errors here, such as by displaying an error message
-        console.error(error.message);
-      });
-  }, []);
     
       return (
         <div className="authentication-container">

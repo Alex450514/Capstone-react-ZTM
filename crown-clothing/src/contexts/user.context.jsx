@@ -4,6 +4,8 @@ import { onAuthStateChangedListener, createUserDocumentFromAuth } from "../utils
 
 import { createAction } from "../utils/reducer/reducer.utils";
 
+import { onSnapshot } from 'firebase/firestore';
+
 export const UserContext = createContext({
     currentUser: null,
     setCurrentUser: () => null,
@@ -42,14 +44,33 @@ export const UserProvider = ({ children }) => {
     const value = {currentUser, setCurrentUser};
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChangedListener((user) => {
-            if (user) {
-                createUserDocumentFromAuth(user);
+        const unsubscribeFromAuth = onAuthStateChanged(auth, (userAuth) => {
+            if (userAuth) {
+                // Since createUserDocumentFromAuth returns a DocumentReference, 
+                // we can immediately use onSnapshot on this reference.
+                createUserDocumentFromAuth(userAuth).then(userDocRef => {
+                    const unsubscribeFromDoc = onSnapshot(userDocRef, (docSnapshot) => {
+                        if (docSnapshot.exists()) {
+                            setCurrentUser({
+                                id: docSnapshot.id,
+                                ...docSnapshot.data(),
+                            });
+                        }
+                    });
+    
+                    // Optional: Handle unsubscribe from the document snapshot listener
+                    // You may store this unsubscribe function to call it when the component unmounts
+                }).catch(error => console.error("Error fetching user document:", error));
+            } else {
+                setCurrentUser(null);
             }
-            setCurrentUser(user);
-        })
-
-        return unsubscribe;
+        });
+    
+        // Cleanup function to unsubscribe from auth changes when component unmounts
+        return () => {
+            unsubscribeFromAuth();
+            // If you stored the unsubscribe function for doc snapshot, call it here
+        };
     }, []);
 
     return <UserContext.Provider value={value}>{children}</UserContext.Provider>
