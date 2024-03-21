@@ -4,7 +4,6 @@ import { Fragment, useContext } from "react";
 import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 import './main-header.styles.jsx';
 
-import { UserContext } from "../../contexts/user.context";
 import CartContext from "../../contexts/cart.context";
 
 import CardIcon from "../cart-icon/cad-icon.component";
@@ -15,9 +14,13 @@ import { auth } from "../../utils/firebase/firebase.utils";
 
 import { NavigationContainer, LogoContainer, NavLinksContainer, NavLink } from "./main-header.styles.jsx";
 
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../store/user/user.selector";
+
 const Header = () => {
-    const { currentUser } = useContext(UserContext);
-    const { isCartOpen, setIsCartOpen } = useContext(CartContext);
+    const { isCartOpen } = useContext(CartContext);
+
+    const currentUser = useSelector(selectCurrentUser);
 
     //FIREBASE
     const handleSignOut = async () => {
