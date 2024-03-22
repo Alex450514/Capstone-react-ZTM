@@ -58,7 +58,8 @@ const Header = () => {
                     }
                     <CardIcon></CardIcon>
                 </NavLinksContainer>
-                {isCartOpen && <CartDropdown />}
+                <CartDropdown />
+                {/* {isCartOpen && <CartDropdown />} */}
             </NavigationContainer>
             <Outlet />
         </Fragment>

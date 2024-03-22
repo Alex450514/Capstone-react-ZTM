@@ -7,16 +7,17 @@ import { useNavigate } from 'react-router-dom';
 import { CartDropdownContainer, CartItems, EmptyMessage } from './cart-dropdown.styles.jsx';
 
 const CartDropdown = () => {
-    const { cartItems } = useContext(CartContext);
+    const { cartItems, isCartOpen, setIsCartOpen } = useContext(CartContext);
 
     let navigate = useNavigate();
 
     const navigateToRoute = () => {
+        setIsCartOpen(false);
         navigate('/checkout'); 
     };
 
     return (
-        <CartDropdownContainer>
+        <CartDropdownContainer isVisible={isCartOpen}>
             <CartItems>
                 {cartItems.length > 0 ? (
                     cartItems.map((product) => (

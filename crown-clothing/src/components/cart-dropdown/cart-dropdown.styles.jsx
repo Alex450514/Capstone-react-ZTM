@@ -21,6 +21,9 @@ export const CartDropdownContainer = styled.div`
   ${BaseButton}, ${GoogleSignInButton}, ${InvertedButton} {
     margin-top: auto;
   }
+  visibility: ${props => props.isVisible ? 'visible' : 'hidden'};
+  opacity: ${props => props.isVisible ? '1' : '0'};
+  transition: opacity 0.3s ease, visibility 0.3s ease;s
 `;
 
 export const EmptyMessage = styled.span`

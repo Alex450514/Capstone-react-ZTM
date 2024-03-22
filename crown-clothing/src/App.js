@@ -7,7 +7,7 @@ import Shop from './routes/shop/shop.component';
 import SignIn from './routes/sign-in/sign-in.components';
 import Checkout from './routes/checkout/checkout.component';
 
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import ProductCategory from './routes/product-category/product-category.component';
 
 import { useDispatch } from 'react-redux';
@@ -17,6 +17,8 @@ import { setCurrentUser } from './store/user/user.action';
 import { onSnapshot } from 'firebase/firestore';
 import { useEffect } from 'react';
 import { createUserDocumentFromAuth } from './utils/firebase/firebase.utils';
+
+import { motion, AnimatePresence } from 'framer-motion';
 
 
 const App = () => {
@@ -55,16 +57,28 @@ const App = () => {
 
   //////////////////////////
 
+  const location = useLocation();
+
   return (
-    <Routes>
+    <AnimatePresence mode='wait'>
+    <Routes location={location} key={location.pathname}>
       <Route path='/' element={<Header />}>
-        <Route index element={<Home />} />
-        <Route path='shop' element={<Shop />} />
+        <Route index element={
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <Home />
+        </motion.div>
+        } />
+        <Route path='shop' element={
+        <motion.div initial={{ opacity: 0, x: 100 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -100 }} transition={{ type: "linear" }}>
+          <Shop />
+        </motion.div>
+        } />
         <Route path="/shop/:categoryId" element={<ProductCategory />} />
         <Route path='sign-in' element={<SignIn />} />
         <Route path='checkout' element={<Checkout />} />
       </Route>
     </Routes>
+    </AnimatePresence>
   )
 }
 
