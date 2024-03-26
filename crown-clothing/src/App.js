@@ -10,94 +10,20 @@ import Checkout from './routes/checkout/checkout.component';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import ProductCategory from './routes/product-category/product-category.component';
 
-import { useDispatch } from 'react-redux';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from './utils/firebase/firebase.utils';
-import { setCurrentUser } from './store/user/user.action';
-import { onSnapshot } from 'firebase/firestore';
-import { useEffect } from 'react';
-import { createUserDocumentFromAuth } from './utils/firebase/firebase.utils';
-
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { setIsLoading } from './store/categories/category.action';
-import { setCategoriesMap } from './store/categories/category.action';
-import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
-import { db } from './utils/firebase/firebase.utils';
-import { useSelector } from 'react-redux';
+import { useFetchCategories } from './store/categories/useFetchCategories';
+import { useFirebaseAuth } from './store/user/useFirebaseAuth';
 
 
 const App = () => {
 
-  const dispatch = useDispatch();
+  useFirebaseAuth();
 
-  useEffect(() => {
-    const unsubscribeFromAuth = onAuthStateChanged(auth, (userAuth) => {
-        if (userAuth) {
-            // Since createUserDocumentFromAuth returns a DocumentReference, 
-            // we can immediately use onSnapshot on this reference.
-            createUserDocumentFromAuth(userAuth).then(userDocRef => {
-                const unsubscribeFromDoc = onSnapshot(userDocRef, (docSnapshot) => {
-                    if (docSnapshot.exists()) {
-                        dispatch(setCurrentUser({
-                            id: docSnapshot.id,
-                            ...docSnapshot.data(),
-                        }));
-                    }
-                });
+  ///Categories reducer
+  const { isLoading } = useFetchCategories();
 
-                // Optional: Handle unsubscribe from the document snapshot listener
-                // You may store this unsubscribe function to call it when the component unmounts
-            }).catch(error => console.error("Error fetching user document:", error));
-        } else {
-            dispatch(setCurrentUser(null));
-        }
-    });
-
-    // Cleanup function to unsubscribe from auth changes when component unmounts
-    return () => {
-        unsubscribeFromAuth();
-        // If you stored the unsubscribe function for doc snapshot, call it here
-    };
-}, []);
-
-  //////////////////////////
-
-  const currentUser = useSelector((state) => state.user.currentUser);
-
-  const fetchCategories = async () => {
-    setIsLoading(true);
-    try {
-        if (currentUser) {
-            // User is logged in; fetch all categories
-            const querySnapshot = await getDocs(collection(db, 'categories'));
-            const categoriesData = querySnapshot.docs.reduce((acc, docSnapshot) => {
-                const { title, items } = docSnapshot.data();
-                acc[title.toLowerCase()] = items;
-                return acc;
-            }, {});
-            dispatch(setCategoriesMap(categoriesData));
-        } else {
-            // User is logged out; fetch only 'hats' category
-            const docRef = doc(db, 'categories', 'hats');
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const { title, items } = docSnap.data();
-                dispatch(setCategoriesMap({ [title.toLowerCase()]: items }));
-            } else {
-                console.log("No such document!");
-            }
-        }
-    } catch (error) {
-        console.error("Error fetching categories: ", error);
-    }
-    setIsLoading(false);
-};
-
-useEffect(() => {
-  fetchCategories();
-}, [currentUser]);
+  /////////////////////////////////////////////////////////////////////////////
 
   const location = useLocation();
 
