@@ -20,6 +20,12 @@ import { createUserDocumentFromAuth } from './utils/firebase/firebase.utils';
 
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { setIsLoading } from './store/categories/category.action';
+import { setCategoriesMap } from './store/categories/category.action';
+import { getDocs, collection, doc, getDoc } from 'firebase/firestore';
+import { db } from './utils/firebase/firebase.utils';
+import { useSelector } from 'react-redux';
+
 
 const App = () => {
 
@@ -56,6 +62,42 @@ const App = () => {
 }, []);
 
   //////////////////////////
+
+  const currentUser = useSelector((state) => state.user.currentUser);
+
+  const fetchCategories = async () => {
+    setIsLoading(true);
+    try {
+        if (currentUser) {
+            // User is logged in; fetch all categories
+            const querySnapshot = await getDocs(collection(db, 'categories'));
+            const categoriesData = querySnapshot.docs.reduce((acc, docSnapshot) => {
+                const { title, items } = docSnapshot.data();
+                acc[title.toLowerCase()] = items;
+                return acc;
+            }, {});
+            dispatch(setCategoriesMap(categoriesData));
+        } else {
+            // User is logged out; fetch only 'hats' category
+            const docRef = doc(db, 'categories', 'hats');
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const { title, items } = docSnap.data();
+                dispatch(setCategoriesMap({ [title.toLowerCase()]: items }));
+            } else {
+                console.log("No such document!");
+            }
+        }
+    } catch (error) {
+        console.error("Error fetching categories: ", error);
+    }
+    setIsLoading(false);
+};
+
+useEffect(() => {
+  fetchCategories();
+}, [currentUser]);
 
   const location = useLocation();
 

@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useState, useEffect } from "react";
 import ProductCard from "../../components/product-card/product-card.component"; 
 
 import './product-category.styles.scss';
@@ -8,14 +7,8 @@ import './product-category.styles.scss';
 const ProductCategory = () => {
     const { categoryId } = useParams();
     const { categoriesMap, isLoading } = useSelector((state) => state.categories);
-    
-    // Initialize state with a function to ensure it's always up to date
-    const [products, setProducts] = useState(() => categoriesMap[categoryId] || []);
 
-    useEffect(() => {
-        // Update products based on the current categoryId and categoriesMap
-        setProducts(categoriesMap[categoryId] || []);
-    }, [categoryId, categoriesMap]); // Dependencies: re-run effect if these change
+    const products = categoriesMap[categoryId] || [];
 
     // Show loading text if isLoading is true
     if (isLoading) {
