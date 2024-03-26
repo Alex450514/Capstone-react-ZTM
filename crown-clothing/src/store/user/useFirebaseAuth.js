@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { onAuthStateChanged, onSnapshot } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { createUserDocumentFromAuth, auth } from '../../utils/firebase/firebase.utils';
 import { setCurrentUser } from './user.action';
+import { onSnapshot } from 'firebase/firestore';
 
 export const useFirebaseAuth = () => {
   const dispatch = useDispatch();
