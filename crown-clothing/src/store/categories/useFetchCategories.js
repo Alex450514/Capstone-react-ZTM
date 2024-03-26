@@ -29,7 +29,9 @@ export const useFetchCategories = () => {
 
             if (docSnap.exists()) {
                 const { title, items } = docSnap.data();
-                dispatch(setCategoriesMap({ [title.toLowerCase()]: items }));
+                // Apply filter for price less than or equal to 20
+                const filteredItems = items.filter(item => item.price <= 20);
+                dispatch(setCategoriesMap({ [title.toLowerCase()]: filteredItems }));
             } else {
                 console.log("No such document!");
             }

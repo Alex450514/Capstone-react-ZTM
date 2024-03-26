@@ -18,12 +18,16 @@ import { useFirebaseAuth } from './store/user/useFirebaseAuth';
 
 const App = () => {
 
+  ///User reducer
   useFirebaseAuth();
 
   ///Categories reducer
   const { isLoading } = useFetchCategories();
 
   /////////////////////////////////////////////////////////////////////////////
+  if (isLoading) {
+    return <div>Loading categories...</div>;
+  }
 
   const location = useLocation();
 
