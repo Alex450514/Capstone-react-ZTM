@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase/firebase.utils';
-
 import { setCategoriesMap } from './category.action';
 
 export const useFetchCategories = () => {
