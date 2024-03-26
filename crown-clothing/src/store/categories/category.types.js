@@ -1,0 +1,6 @@
+
+export const CATEGORIES_ACTION_TYPES = {
+    SET_CATEGORIES_MAP: 'category/SET_CATEGORIES_MAP',
+    SET_IS_LOADING: 'category/SET_IS_LOADING'
+};
+
