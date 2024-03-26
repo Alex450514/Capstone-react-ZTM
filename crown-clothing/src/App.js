@@ -24,12 +24,12 @@ const App = () => {
   ///Categories reducer
   const { isLoading } = useFetchCategories();
 
+  const location = useLocation();
+
   /////////////////////////////////////////////////////////////////////////////
   if (isLoading) {
     return <div>Loading categories...</div>;
   }
-
-  const location = useLocation();
 
   return (
     <AnimatePresence mode='wait'>
