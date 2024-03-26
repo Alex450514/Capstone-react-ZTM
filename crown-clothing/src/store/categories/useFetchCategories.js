@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../utils/firebase/firebase.utils';
 import { setCategoriesMap } from './category.action';
+import { selectCurrentUser } from '../user/user.selector';
 
 export const useFetchCategories = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const currentUser = useSelector((state) => state.user.currentUser);
+  const currentUser = useSelector(selectCurrentUser);
   const dispatch = useDispatch();
 
   useEffect(() => {
