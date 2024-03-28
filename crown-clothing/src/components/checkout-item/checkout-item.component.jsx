@@ -1,18 +1,10 @@
 import './checkout-item.styles.scss';
-import { useContext } from 'react';
-
-import CartContext from '../../contexts/cart.context';
+import { useCart } from '../../store/cart/useCart';
 
 const CheckoutItem = ({ product }) => {
     const {name, price, quantity, imageUrl} = product;
 
-    const { removeAllOfProductFromCart } = useContext(CartContext);
-    const { removeItemFromCart } = useContext(CartContext);
-    const { addItemToCart } = useContext(CartContext);
-
-    const removeProduct = () => removeAllOfProductFromCart(product);
-    const dropQty = () => removeItemFromCart(product);
-    const addQty = () => addItemToCart(product);
+    const { removeAllOfProductFromCart, addItemToCart, removeItemFromCart } = useCart();
 
     return (
         <div className='checkout-item-container'>
@@ -21,11 +13,11 @@ const CheckoutItem = ({ product }) => {
             </div>
             <span className='name'>{name}</span>
             <span className='quantity'>
-                <div className='arrow' onClick={dropQty}>
+                <div className='arrow' onClick={() => removeItemFromCart(product)}>
                     &#10094;
                 </div>
                 <span className='value'>{quantity}</span>
-                <div className='arrow' onClick={addQty}>
+                <div className='arrow' onClick={() => addItemToCart(product)}>
                     &#10095;
                 </div>
             </span>
@@ -36,7 +28,7 @@ const CheckoutItem = ({ product }) => {
                 <Button onClick={addQty}>More</Button>
             </div>
             <p>{price * quantity}$</p> */}
-            <div className='remove-button' onClick={removeProduct}>
+            <div className='remove-button' onClick={() => removeAllOfProductFromCart(product)}>
                 &#10005;
             </div>
         </div>

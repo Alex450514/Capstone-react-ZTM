@@ -1,18 +1,21 @@
 import Button, { BUTTON_TYPE_CLASSES } from '../button/button.component';
 import CartItem from '../cart-item/cart-item.component';
 
-import CartContext from '../../contexts/cart.context';
-import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartDropdownContainer, CartItems, EmptyMessage } from './cart-dropdown.styles.jsx';
+import { selectCartItems, selectIsCartOpen } from '../../store/cart/cart.selector.js';
+import { useSelector } from 'react-redux';
+import { useCart } from '../../store/cart/useCart.js';
 
 const CartDropdown = () => {
-    const { cartItems, isCartOpen, setIsCartOpen } = useContext(CartContext);
+    const cartItems = useSelector(selectCartItems);
+    const isCartOpen = useSelector(selectIsCartOpen);
+    const { toggleCart } = useCart();
 
     let navigate = useNavigate();
 
     const navigateToRoute = () => {
-        setIsCartOpen(false);
+        toggleCart();
         navigate('/checkout'); 
     };
 
@@ -21,7 +24,7 @@ const CartDropdown = () => {
             <CartItems>
                 {cartItems.length > 0 ? (
                     cartItems.map((product) => (
-                        <CartItem product={product}></CartItem>
+                        <CartItem key={product.id} product={product}></CartItem>
                     ))
                 ) : (
                     <EmptyMessage>Your cart is empty.</EmptyMessage>

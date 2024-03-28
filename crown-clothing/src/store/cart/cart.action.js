@@ -1,0 +1,69 @@
+import { createAction } from "../../utils/reducer/reducer.utils";
+import { CART_ACTION_TYPES } from "./cart.types";
+
+export const setIsCartOpen = (isCartOpen) =>
+    createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, isCartOpen);
+
+export const setCartItems = (cartItems) =>
+    createAction(CART_ACTION_TYPES.SET_CART_ITEMS, cartItems);
+
+export const setCartCount = (cartCount) =>
+    createAction(CART_ACTION_TYPES.SET_CART_COUNT, cartCount);
+
+export const setCartTotal = (cartTotal) =>
+    createAction(CART_ACTION_TYPES.SET_CART_TOTAL, cartTotal)
+
+export const addItem = (cartItems, productToAdd) => {
+    const newCartItems = cartItems.map(cartItem => {
+        if (cartItem.id === productToAdd.id) {
+            return { ...cartItem, quantity: cartItem.quantity + 1 };
+        } else {
+            return cartItem;
+        }
+    });
+
+    const existingCartItem = newCartItems.find((item) => item.id === productToAdd.id);
+    if (!existingCartItem) {
+        newCartItems.push({ ...productToAdd, quantity: 1 });
+    }
+    
+    return {
+        type: CART_ACTION_TYPES.ADD_ITEM,
+        payload: newCartItems,
+    };
+};
+
+export const removeItem = (cartItems, productToRemove) => {
+    const newCartItems = cartItems.reduce((accumulatedCartItems, cartItem) => {
+      if (cartItem.id === productToRemove.id) {
+        // Only decrease quantity if it's more than 1
+        if (cartItem.quantity > 1) {
+          return accumulatedCartItems.concat({ ...cartItem, quantity: cartItem.quantity - 1 });
+        }
+      }
+      return accumulatedCartItems.concat(cartItem);
+    }, []);
+  
+    return {
+      type: CART_ACTION_TYPES.REMOVE_ITEM,
+      payload: newCartItems,
+    };
+};
+
+export const clearCartItems = () => ({
+    type: CART_ACTION_TYPES.CLEAR_CART_ITEMS
+});
+
+export const removeItems = (cartItems, productToRemove) => {
+    const newCartItems = cartItems.filter(cartItem => cartItem.id !== productToRemove.id);
+  
+    return {
+      type: CART_ACTION_TYPES.REMOVE_ALL_OF_PRODUCT_FROM_CART,
+      payload: newCartItems,
+    };
+};
+
+export const toggleCartHidden = () => ({
+    type: CART_ACTION_TYPES.TOGGLE_CART_HIDDEN
+});
+
