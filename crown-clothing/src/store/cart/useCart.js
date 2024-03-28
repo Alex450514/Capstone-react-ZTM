@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem, removeItem, removeItems, toggleCartHidden } from './cart.action';
 import { selectCartItems, selectCartCount, selectCartTotal, selectIsCartOpen } from './cart.selector';
 
+import { collection, getDocs } from 'firebase/firestore';
+
 export const useCart = () => {
   const dispatch = useDispatch();
   const cartItems = useSelector(selectCartItems);
@@ -34,6 +36,6 @@ export const useCart = () => {
     removeItemFromCart,
     removeAllOfProductFromCart,
     cartCount,
-    cartTotal,
+    cartTotal
   };
 };

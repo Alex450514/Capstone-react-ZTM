@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     isCartOpen: false,
     cartItems: [],
     cartCount: 0,
-    cartTotal: 0
+    cartTotal: 0,
+    latestPriceUpdate: 0
 };
 
 export const cartReducer = (state = INITIAL_STATE, action = {}) => {
@@ -57,6 +58,20 @@ export const cartReducer = (state = INITIAL_STATE, action = {}) => {
                 ...state,
                 isCartOpen: !state.isCartOpen
             }
+        case CART_ACTION_TYPES.UPDATE_PRICES:
+            const updatedCartItems = state.cartItems.map(cartItem => {
+                // Assuming the action.payload is an object with item IDs as keys and their updated prices as values
+                const updatedPrice = payload[cartItem.id];
+                if (updatedPrice !== undefined) {
+                return { ...cartItem, price: updatedPrice };
+                }
+                return cartItem;
+            });
+        
+            return {
+                ...state,
+                cartItems: updatedCartItems,
+            };
         default:
             return state;
     }

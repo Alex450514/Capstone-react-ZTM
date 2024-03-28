@@ -1,6 +1,9 @@
 import { createAction } from "../../utils/reducer/reducer.utils";
 import { CART_ACTION_TYPES } from "./cart.types";
 
+import { db } from "../../utils/firebase/firebase.utils";
+import { collection, getDocs } from "firebase/firestore";
+
 export const setIsCartOpen = (isCartOpen) =>
     createAction(CART_ACTION_TYPES.SET_IS_CART_OPEN, isCartOpen);
 
@@ -66,4 +69,47 @@ export const removeItems = (cartItems, productToRemove) => {
 export const toggleCartHidden = () => ({
     type: CART_ACTION_TYPES.TOGGLE_CART_HIDDEN
 });
+
+export const updatePrices = (updatedPrices) => ({
+    type: CART_ACTION_TYPES.UPDATE_PRICES,
+    payload: updatedPrices,
+  });
+
+export const updateCartPrices = () => async (dispatch, getState) => {
+
+    try {
+    const itemsWithPrices = await fetchAllItemsWithPrices(db); // Ensure db is your Firestore instance
+    const { cartItems } = getState().cart;
+
+    const updatedCartItems = cartItems.map((item) => {
+    const latestPrice = itemsWithPrices[item.id];
+    if (latestPrice && latestPrice !== item.price) {
+        return { ...item, price: latestPrice };
+    }
+    return item;
+    });
+
+    dispatch(setCartItems(updatedCartItems)); // Assuming you have an action to update cart items
+    } catch (error) {
+    console.error("Error updating cart prices:", error);
+    // Optionally dispatch an action to handle the error state
+    } finally {
+
+    }
+};
+
+const fetchAllItemsWithPrices = async (db) => {
+    const categoriesSnapshot = await getDocs(collection(db, 'categories'));
+    let itemsWithPrices = {};
+  
+    categoriesSnapshot.forEach((docSnapshot) => {
+      const { title, items } = docSnapshot.data();
+      items.forEach((item) => {
+        // Assuming each item has a unique ID across all categories
+        itemsWithPrices[item.id] = item.price;
+      });
+    });
+  
+    return itemsWithPrices;
+  };
 

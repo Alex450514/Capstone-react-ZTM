@@ -4,8 +4,6 @@ import { Fragment, useContext } from "react";
 import { ReactComponent as CrownLogo } from '../../assets/crown.svg';
 import './main-header.styles.jsx';
 
-import CartContext from "../../contexts/cart.context";
-
 import CardIcon from "../cart-icon/cad-icon.component";
 import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 
@@ -18,7 +16,6 @@ import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../store/user/user.selector";
 
 const Header = () => {
-    const { isCartOpen } = useContext(CartContext);
 
     const currentUser = useSelector(selectCurrentUser);
 
